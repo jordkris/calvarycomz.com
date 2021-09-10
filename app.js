@@ -1,33 +1,38 @@
+// all important modules
 const express = require('express');
-const mysql = require('mysql');
 const app = express();
+const mysql = require('mysql');
+const path = require("path");
+var $ = require('jquery');
+// var methodOverride = require("method-override");
 
-app.use(express.static('public'));
-app.use(express.urlencoded({extended: false}));
-// import express, { static, urlencoded } from 'express';
-// import { createConnection } from 'mysql';
-// const app = express();
+// declare connection to db
+const con = require("./config/database.js");
 
-// app.use(static('public'));
-// app.use(urlencoded({ extended: false }));
+// set assets path
+app.use(express.static('assets'));
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'yehezkielferi.com'
+// entended config
+app.use(express.urlencoded({ extended: false }));
+// app.use(methodOverride("_method"));
+
+// set views path
+app.set("views", path.join(__dirname, "views"));
+
+// connect route to database
+app.use(function(req, res, next) {
+    req.con = con;
+    next();
 });
 
-connection.connect((err) => {
-    if (err) {
-        console.log('error connecting: ' + err.stack);
-        return;
-    }
-    console.log('success');
-});
+// include router
+const webRouter = require("./routes/webRouter");
+const apiRouter = require("./routes/apiRouter");
+app.use("/", webRouter);
+app.use("/api", apiRouter);
 
-app.get('/', (req, res) => {
-    res.render('index.ejs');
+// start server
+const port = 3000;
+app.listen(port, function() {
+    console.log("server listening on port " + port);
 });
-
-app.listen(3000);
