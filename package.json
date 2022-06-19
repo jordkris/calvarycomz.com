@@ -1,29 +1,33 @@
 {
-  "name": "yehezkielferi.com",
-  "version": "1.0.0",
-  "description": "TITLE: \r Author - 100% Fully Responsive One Page HTML5 Template",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jordy-k/yehezkielferi.com.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jordy-k/yehezkielferi.com/issues"
-  },
-  "homepage": "https://github.com/jordy-k/yehezkielferi.com#readme",
-  "dependencies": {
-    "dotenv": "^16.0.1",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "mysql": "^2.18.1",
-    "nodemon": "^2.0.12",
-    "process": "^0.11.10"
-  }
+    "name": "yehezkielferi.com",
+    "version": "1.0.0",
+    "description": "TITLE: \r Author - 100% Fully Responsive One Page HTML5 Template",
+    "main": "index.js",
+    "scripts": {
+        "start": "node -r dotenv/config app.js",
+        "dev": "nodemon -r dotenv/config app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jordy-k/yehezkielferi.com.git"
+    },
+    "keywords": [],
+    "author": "Jordy Kristianata",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/jordy-k/yehezkielferi.com/issues"
+    },
+    "homepage": "https://github.com/jordy-k/yehezkielferi.com#readme",
+    "dependencies": {
+        "dotenv": "^16.0.1",
+        "ejs": "^3.1.6",
+        "express": "^4.17.1",
+        "jquery": "^3.6.0",
+        "method-override": "^3.0.0",
+        "mysql": "^2.18.1",
+        "nodemon": "^2.0.12",
+        "process": "^0.11.10",
+        "path": "^0.12.7"
+    }
 }
