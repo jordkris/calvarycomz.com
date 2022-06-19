@@ -4,6 +4,22 @@ const express = require('express');
 const app = express();
 const path = require("path");
 var $ = require('jquery');
+// handle crash
+const http = require('http');
+const terminate = require('./config/terminate.js');
+const server = http.createServer(app);
+
+const exitHandler = terminate(server, {
+    coredump: false,
+    timeout: 500
+});
+
+process.on('uncaughtException', exitHandler(0, 'Unexpected Error'));
+process.on('unhandledRejection', exitHandler(0, 'Unhandled Promise'));
+process.on('SIGTERM', exitHandler(0, 'SIGTERM'));
+process.on('SIGINT', exitHandler(0, 'SIGINT'));
+
+
 // var methodOverride = require("method-override");
 
 app.use(express.static('public'));
@@ -42,6 +58,6 @@ app.use("/", webRouter);
 app.use("/api", apiRouter);
 
 // start server
-let server = app.listen(process.env.PORT || 3000, () => {
-    console.log("Express server listening on port %d in %s mode", server.address().port, app.settings.env);
+let appListen = app.listen(process.env.PORT || 3000, () => {
+    console.log("Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
 });

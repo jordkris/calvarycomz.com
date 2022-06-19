@@ -27,6 +27,36 @@ var removeLoading = (arrId) => {
     });
 }
 
+let counter = () => {
+    var counta = 0;
+    /* Onscroll number counter */
+    var statisticNumbers = $('.single-count');
+    if (statisticNumbers.length) {
+        var oTop = statisticNumbers.offset().top - window.innerHeight;
+        if (counta == 0 && $(window).scrollTop() > oTop) {
+            $('.count').each(function() {
+                var $this = $(this),
+                    countTo = $this.attr('data-count');
+                $({
+                    countNum: $this.text()
+                }).animate({
+                    countNum: countTo
+                }, {
+                    duration: 1000,
+                    easing: 'swing',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum);
+                    }
+                });
+            });
+            counta = 1;
+        }
+    }
+}
+
 $.ajax({
     url: '/api/profile/getAll',
     type: "GET",
@@ -47,12 +77,136 @@ $.ajax({
             ]);
             $("#profile-name").html(result[0].name);
             $("#profile-job").html(result[0].job);
+            $("#nickname").html(`<span>${result[0].nickname[0]}</span><h2 class="universal-h2">${result[0].nickname.slice(1)}</h2>`);
+            $("#headline").html(result[0].headline);
             $("#profile-main-image").attr("src", "/images/profile/" + result[0].main_image);
             $("#profile-about-image").attr("src", "/images/profile/" + result[0].about_image);
             $("#profile-motto").html(result[0].motto);
+            $('#about-me-1').html(`<span>${result[0].about_me_1[0]}</span>${result[0].about_me_1.slice(1)}`);
+            $('#about-me-2').html(`<span>${result[0].about_me_2[0]}</span>${result[0].about_me_2.slice(1)}`);
+            $('#facebook').attr('href', result[0].facebook_url);
+            $('#instagram').attr('href', result[0].instagram_url);
+            $('#youtube').attr('href', result[0].youtube_url);
         }
     },
     error: (e) => {
         console.log(e);
     }
 });
+
+(async() => {
+    await $.ajax({
+        url: '/api/books/getAll',
+        type: "GET",
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                let books = '';
+                result.forEach((book) => {
+                    books += `
+                    <div class="single-book">
+                        <a href="#" class="single-book__img">
+                            <img src="/images/${book.image_path}" alt="single book and cd">
+                            <div class="single-book_download">
+                                <img src="/images/download.svg" alt="book image">
+                            </div>
+                        </a>
+                        <h4 class="single-book__title">${book.name}</h4>
+                        <span class="single-book__price">Rp ${Intl.NumberFormat('id-ID').format(book.price)}</span>
+                        <!-- star rating -->
+                        <div class="rating">
+                            <span>&#9734;</span>
+                            <span>&#9734;</span>
+                            <span>&#9734;</span>
+                            <span>&#9734;</span>
+                            <span>&#9734;</span>
+                        </div>
+                        <!-- star rating end -->
+                    </div>`;
+                });
+
+                $('.books').html(books);
+                $('#books-count').attr('data-count', result.length);
+            }
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    await $.ajax({
+        url: '/api/pages/getAll',
+        type: "GET",
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                let pages = '';
+                result.forEach((page) => {
+                    pages += `
+                    <div class="single-blog">
+                        <div class="single-blog__img">
+                            <img src="/images/${page.image_path}" alt="blog image">
+                        </div>
+                        <div class="single-blog__text">
+                            <h4>${page.title}</h4>
+                            <span>Posted in ${ page.time_posted.split("T")[0] } ${page.time_posted.split("T")[1].split(".")[0]}</span>
+                            <p>${page.contents}</p>
+                        </div>
+                    </div>`;
+                });
+
+                $('.pages').html(pages);
+                $('#pages-count').attr('data-count', result.length);
+            }
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    await $.ajax({
+        url: '/api/reviews/getAll',
+        type: "GET",
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                let reviews = '';
+                result.forEach((review) => {
+                    reviews += `
+                    <div>
+                        <h2 class="universal-h2 universal-h2-bckg">What People Are Saying</h2>
+                        <p>“${review.contents}”</p>
+                        <img src="/images/quotes.svg" alt="quotes svg">
+                        <h4>${review.name}</h4>
+                        <p>${review.job}</p>
+                    </div>`;
+                });
+
+                $('.reviews').html(reviews);
+                $('#reviews-count').attr('data-count', result.length);
+            }
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    await $(window).scroll(() => {
+        counter()
+    });
+    /* Blog slider */
+    await $('.blog-slider').slick({
+        slidesToShow: 2,
+        prevArrow: '<span class="span-arrow slick-prev"><</span>',
+        nextArrow: '<span class="span-arrow slick-next">></span>',
+        responsive: [{
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 1
+            }
+        }]
+    });
+    /* About me slider */
+    await $('.about-me-slider').slick({
+        slidesToShow: 1,
+        prevArrow: '<span class="span-arrow slick-prev"><</span>',
+        nextArrow: '<span class="span-arrow slick-next">></span>'
+    });
+})();
