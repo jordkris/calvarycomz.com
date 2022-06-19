@@ -1,9 +1,11 @@
+require('dotenv').config();
+const process = require('process');
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
 
 app.use(express.static('public'));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 // import express, { static, urlencoded } from 'express';
 // import { createConnection } from 'mysql';
 // const app = express();
@@ -11,23 +13,10 @@ app.use(express.urlencoded({extended: false}));
 // app.use(static('public'));
 // app.use(urlencoded({ extended: false }));
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'yehezkielferi.com'
-});
-
-connection.connect((err) => {
-    if (err) {
-        console.log('error connecting: ' + err.stack);
-        return;
-    }
-    console.log('success');
-});
-
 app.get('/', (req, res) => {
     res.render('index.ejs');
 });
 
-app.listen(3000);
+let server = app.listen(process.env.PORT || 3000, () => {
+    console.log("Express server listening on port %d in %s mode", server.address().port, app.settings.env);
+});
