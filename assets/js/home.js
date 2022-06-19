@@ -7,7 +7,7 @@ var loadingImage = (id, size) => {
         caption = '⚫'.repeat(seconds % 5 + 1) + '⚪'.repeat(4 - seconds % 5);
         $('.' + id).attr('src', loadingImagePath + caption);
         seconds++;
-    }, 600);
+    }, 500);
 };
 
 var loadingText = (id) => {
@@ -18,7 +18,7 @@ var loadingText = (id) => {
         caption = '.'.repeat(seconds % 5 + 1);
         $('.' + id).html(caption);
         seconds++;
-    }, 600);
+    }, 500);
 };
 
 var removeLoading = (arrId) => {
@@ -39,19 +39,17 @@ $.ajax({
     },
     success: (result) => {
         if (!result.fatal) {
-            setTimeout(() => {
-                removeLoading(['profile-main-image',
-                    'profile-about-image',
-                    'profile-name',
-                    'profile-job',
-                    'profile-motto'
-                ]);
-                $("#profile-name").html(result[0].name);
-                $("#profile-job").html(result[0].job);
-                $("#profile-main-image").attr("src", "/images/profile/" + result[0].main_image);
-                $("#profile-about-image").attr("src", "/images/profile/" + result[0].about_image);
-                $("#profile-motto").html(result[0].motto);
-            }, 3000);
+            removeLoading(['profile-main-image',
+                'profile-about-image',
+                'profile-name',
+                'profile-job',
+                'profile-motto'
+            ]);
+            $("#profile-name").html(result[0].name);
+            $("#profile-job").html(result[0].job);
+            $("#profile-main-image").attr("src", "/images/profile/" + result[0].main_image);
+            $("#profile-about-image").attr("src", "/images/profile/" + result[0].about_image);
+            $("#profile-motto").html(result[0].motto);
         }
     },
     error: (e) => {

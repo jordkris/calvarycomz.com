@@ -1,9 +1,7 @@
 // all important modules
-require('dotenv').config();
 const process = require('process');
 const express = require('express');
 const app = express();
-const mysql = require('mysql');
 const path = require("path");
 var $ = require('jquery');
 // var methodOverride = require("method-override");
@@ -13,7 +11,7 @@ app.use(express.static('public'));
 // import express, { static, urlencoded } from 'express';
 // import { createConnection } from 'mysql';
 // const app = express();
-// declare connection to db con
+// declare connection to db connection
 let con = require("./config/database.js");
 
 // set assets path
@@ -27,9 +25,9 @@ app.use(express.urlencoded({ extended: false }));
 app.set("views", './views');
 app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-    res.render('home/index.ejs');
-});
+// app.get('/', (req, res) => {
+//     res.render('home/index.ejs');
+// });
 
 // connect route to database
 app.use(function(req, res, next) {
