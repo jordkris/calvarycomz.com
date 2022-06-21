@@ -4,6 +4,10 @@ const express = require('express');
 const app = express();
 const path = require("path");
 var $ = require('jquery');
+// cookie & session 
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 // handle crash
 const http = require('http');
 const terminate = require('./config/terminate.js');
@@ -23,12 +27,18 @@ process.on('SIGINT', exitHandler(0, 'SIGINT'));
 // var methodOverride = require("method-override");
 
 app.use(express.static('public'));
+app.use(cookieParser('secret'));
+app.use(session({
+    secret: 'secret',
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(flash());
 // app.use(express.urlencoded({ extended: false }));
 // import express, { static, urlencoded } from 'express';
 // import { createConnection } from 'mysql';
 // const app = express();
-// declare connection to db connection
-let con = require("./config/database.js");
 
 // set assets path
 app.use(express.static('assets'));
@@ -45,6 +55,8 @@ app.set('view engine', 'ejs');
 //     res.render('home/index.ejs');
 // });
 
+// declare connection to db connection
+let con = require("./config/database.js");
 // connect route to database
 app.use(function(req, res, next) {
     req.con = con;

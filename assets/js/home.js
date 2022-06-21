@@ -63,25 +63,25 @@ $.ajax({
     beforeSend: () => {
         loadingImage('profile-main-image', '636x718');
         loadingImage('profile-about-image', '380x265');
-        loadingText('profile-name');
-        loadingText('profile-job');
-        loadingText('profile-motto');
+        loadingText('organization-name');
+        loadingText('organization-job');
+        loadingText('organization-motto');
     },
     success: (result) => {
         if (!result.fatal) {
             removeLoading(['profile-main-image',
                 'profile-about-image',
-                'profile-name',
-                'profile-job',
-                'profile-motto'
+                'organization-name',
+                'organization-headline',
+                'organization-motto'
             ]);
-            $("#profile-name").html(result[0].name);
-            $("#profile-job").html(result[0].job);
-            $("#nickname").html(`<span>${result[0].nickname[0]}</span><h2 class="universal-h2">${result[0].nickname.slice(1)}</h2>`);
-            $("#headline").html(result[0].headline);
+            $("#organization-name").html(result[0].name);
+            $("#organization-headline").html(result[0].job);
+            $("#organization-motto").html(result[0].motto);
+            $("#founder-name").html(`<span>${result[0].nickname[0]}</span><h2 class="universal-h2">${result[0].nickname.slice(1)}</h2>`);
+            $("#founder-headline").html(result[0].headline);
             $("#profile-main-image").attr("src", "/images/profile/" + result[0].main_image);
             $("#profile-about-image").attr("src", "/images/profile/" + result[0].about_image);
-            $("#profile-motto").html(result[0].motto);
             $('#about-me-1').html(`<span>${result[0].about_me_1[0]}</span>${result[0].about_me_1.slice(1)}`);
             $('#about-me-2').html(`<span>${result[0].about_me_2[0]}</span>${result[0].about_me_2.slice(1)}`);
             $('#facebook').attr('href', result[0].facebook_url);
