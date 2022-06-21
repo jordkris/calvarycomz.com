@@ -80,8 +80,8 @@ $.ajax({
             $("#organization-motto").html(result[0].motto);
             $("#founder-name").html(`<span>${result[0].nickname[0]}</span><h2 class="universal-h2">${result[0].nickname.slice(1)}</h2>`);
             $("#founder-headline").html(result[0].headline);
-            $("#profile-main-image").attr("src", "/images/profile/" + result[0].main_image);
-            $("#profile-about-image").attr("src", "/images/profile/" + result[0].about_image);
+            $("#profile-main-image").attr("src", "/assets/images/profile/" + result[0].main_image);
+            $("#profile-about-image").attr("src", "/assets/images/profile/" + result[0].about_image);
             $('#about-me-1').html(`<span>${result[0].about_me_1[0]}</span>${result[0].about_me_1.slice(1)}`);
             $('#about-me-2').html(`<span>${result[0].about_me_2[0]}</span>${result[0].about_me_2.slice(1)}`);
             $('#facebook').attr('href', result[0].facebook_url);
@@ -106,9 +106,9 @@ $.ajax({
                     books += `
                     <div class="single-book">
                         <a href="#" class="single-book__img">
-                            <img src="/images/${book.image_path}" alt="single book and cd">
+                            <img src="/assets/images/${book.image_path}" alt="single book and cd">
                             <div class="single-book_download">
-                                <img src="/images/download.svg" alt="book image">
+                                <img src="/assets/images/download.svg" alt="book image">
                             </div>
                         </a>
                         <h4 class="single-book__title">${book.name}</h4>
@@ -144,7 +144,7 @@ $.ajax({
                     pages += `
                     <div class="single-blog">
                         <div class="single-blog__img">
-                            <img src="/images/${page.image_path}" alt="blog image">
+                            <img src="/assets/images/${page.image_path}" alt="blog image">
                         </div>
                         <div class="single-blog__text">
                             <h4>${page.title}</h4>
@@ -174,7 +174,7 @@ $.ajax({
                     <div>
                         <h2 class="universal-h2 universal-h2-bckg">What People Are Saying</h2>
                         <p>“${review.contents}”</p>
-                        <img src="/images/quotes.svg" alt="quotes svg">
+                        <img src="/assets/images/quotes.svg" alt="quotes svg">
                         <h4>${review.name}</h4>
                         <p>${review.job}</p>
                     </div>`;

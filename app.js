@@ -41,7 +41,7 @@ app.use(flash());
 // const app = express();
 
 // set assets path
-app.use(express.static('assets'));
+app.use('/assets', express.static('assets'));
 
 // entended config
 app.use(express.urlencoded({ extended: false }));

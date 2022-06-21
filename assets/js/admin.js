@@ -7,10 +7,10 @@ $.ajax({
             $("#organization-name").val(result[0].name);
             $("#organization-headline").val(result[0].job);
             $("#organization-motto").val(result[0].motto);
-            $("#organization-photo").attr("src", "/images/profile/" + result[0].main_image);
+            $("#organization-photo").attr("src", "/assets/images/profile/" + result[0].main_image);
             $("#founder-name").val(result[0].nickname);
             $("#founder-headline").val(result[0].headline);
-            $("#founder-photo").attr("src", "/images/profile/" + result[0].about_image);
+            $("#founder-photo").attr("src", "/assets/images/profile/" + result[0].about_image);
             $('#biography-1').val(result[0].about_me_1);
             $('#biography-2').val(result[0].about_me_2);
             $('#facebook').val(result[0].facebook_url);
@@ -40,7 +40,7 @@ $.ajax({
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="magic-box text-center">
-                                            <img class="magic-item" src="/images/${book.image_path}" />
+                                            <img class="magic-item" src="/assets/images/${book.image_path}" />
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
@@ -96,7 +96,7 @@ $.ajax({
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="magic-box text-center">
-                                        <img class="magic-item" src="/images/${page.image_path}" />
+                                        <img class="magic-item" src="/assets/images/${page.image_path}" />
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
