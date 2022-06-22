@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/slick.css">
+    <script src="https://kit.fontawesome.com/36be16582a.js" crossorigin="anonymous"></script>
+    <title>Author</title>
+    <script>
+        function customToggle(x) {
+            x.classList.toggle("change");
+        }
+    </script>
+</head>
+
+<body class="bg_general">
+    <!-- Navigation -->
+    <nav class="site-navigation">
+        <div class="site-navigation-inner site-container">
+            <img src="../assets/images/site-logo.png" alt="site logo">
+            <div class="main-navigation" onclick="customToggle(this)">
+                <ul class="main-navigation__ul">
+                    <li><a href="../#top">Homepage</a></li>
+                    <li><a href="../#about-me">About Me</a></li>
+                    <li><a href="../#books">My Books</a></li>
+                    <li><a href="../#pages">My Blog</a></li>
+                    <li><a href="../#reviews">Reviews</a></li>
+                    <li><a href="../login">Login</a></li>
+                </ul>
+            </div>
+            <div id="myBtn" class="burger-container" onclick="customToggle(this)">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navigation end -->
+
+    <section>
+        <div class="site-container">
+            <div class="about-me-slider">
+                <div>
+                    <h2 id="title" class="universal-h2 universal-h2-bckg"></h2>
+                </div>
+                <div style="text-align: center;margin-top:20px;">
+                    <img id="thumbnail" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="site-container">
+            <div class="about-me-slider">
+                <p id="contents" style="margin-top:20px;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
+    <script src="../assets/js/page.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

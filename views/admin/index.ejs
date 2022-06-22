@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | General Form Elements</title>
+    <title>Admin Panel</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -20,11 +20,14 @@
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="position:sticky;top:0;">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a class="nav-link">Status : <span id="status"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;Loading</span></a>
                 </li>
             </ul>
 
@@ -32,7 +35,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed;max-width: 20%;">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed;">
             <!-- Brand Logo -->
             <a href="#" class="brand-link">
                 <img src="/assets/dist/img/AdminLTELogo.png" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -134,7 +137,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <div class="magic-box">
+                                            <div class="magic-box text-center">
                                                 <img id="organization-photo" class="magic-item" />
                                             </div>
                                         </div>
@@ -142,15 +145,15 @@
                                             <form>
                                                 <div class="form-group">
                                                     <label>Organization Name</label>
-                                                    <input id="organization-name" type="text" class="form-control" placeholder="Enter ...">
+                                                    <input id="organization-name" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="organization_name" data-id="1">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Organization Headline</label>
-                                                    <input id="organization-headline" type="text" class="form-control" placeholder="Enter ...">
+                                                    <input id="organization-headline" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="organization_headline" data-id="1">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Organization Motto</label>
-                                                    <input id="organization-motto" type="text" class="form-control" placeholder="Enter ...">
+                                                    <input id="organization-motto" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="motto" data-id="1">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleInputFile">Organization Profile Photo</label>
@@ -183,7 +186,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <div class="magic-box">
+                                            <div class="magic-box text-center">
                                                 <img id="founder-photo" class="magic-item" />
                                             </div>
                                         </div>
@@ -191,11 +194,11 @@
                                             <form>
                                                 <div class="form-group">
                                                     <label>Founder's Name</label>
-                                                    <input id="founder-name" type="text" class="form-control" placeholder="Enter ...">
+                                                    <input id="founder-name" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="founder_name" data-id="1">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Founder's Headline</label>
-                                                    <input id="founder-headline" type="text" class="form-control" placeholder="Enter ...">
+                                                    <input id="founder-headline" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="headline" data-id="1">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleInputFile">Founder's Profile Photo</label>
@@ -211,11 +214,11 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Biography 1 </label>
-                                                    <textarea id="biography-1" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                                                    <textarea id="biography-1" class="form-control" rows="3" placeholder="Enter ..." data-table="profile" data-column="about_me_1" data-id="1"></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Biography 2 </label>
-                                                    <textarea id="biography-2" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                                                    <textarea id="biography-2" class="form-control" rows="3" placeholder="Enter ..." data-table="profile" data-column="about_me_2" data-id="1"></textarea>
                                                 </div>
                                             </form>
                                         </div>
@@ -281,15 +284,15 @@
                                     <form>
                                         <div class="form-group">
                                             <label>Facebook</label>
-                                            <input id="facebook" type="text" class="form-control" placeholder="Enter ...">
+                                            <input id="facebook" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="facebook_url" data-id="1">
                                         </div>
                                         <div class="form-group">
                                             <label>Instagram</label>
-                                            <input id="instagram" type="text" class="form-control" placeholder="Enter ...">
+                                            <input id="instagram" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="instagram_url" data-id="1">
                                         </div>
                                         <div class="form-group">
                                             <label>Youtube</label>
-                                            <input id="youtube" type="text" class="form-control" placeholder="Enter ...">
+                                            <input id="youtube" type="text" class="form-control" placeholder="Enter ..." data-table="profile" data-column="youtube_url" data-id="1">
                                         </div>
                                     </form>
                                 </div>

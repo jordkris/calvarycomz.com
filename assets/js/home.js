@@ -57,6 +57,12 @@ let counter = () => {
     }
 }
 
+let extractContent = (s) => {
+    var span = document.createElement('span');
+    span.innerHTML = s;
+    return span.textContent || span.innerText;
+}
+
 $.ajax({
     url: '/api/profile/getAll',
     type: "GET",
@@ -64,7 +70,7 @@ $.ajax({
         loadingImage('profile-main-image', '636x718');
         loadingImage('profile-about-image', '380x265');
         loadingText('organization-name');
-        loadingText('organization-job');
+        loadingText('organization-headline');
         loadingText('organization-motto');
     },
     success: (result) => {
@@ -75,10 +81,10 @@ $.ajax({
                 'organization-headline',
                 'organization-motto'
             ]);
-            $("#organization-name").html(result[0].name);
-            $("#organization-headline").html(result[0].job);
+            $("#organization-name").html(result[0].organization_name);
+            $("#organization-headline").html(result[0].organization_headline);
             $("#organization-motto").html(result[0].motto);
-            $("#founder-name").html(`<span>${result[0].nickname[0]}</span><h2 class="universal-h2">${result[0].nickname.slice(1)}</h2>`);
+            $("#founder-name").html(`<span>${result[0].founder_name[0]}</span><h2 class="universal-h2">${result[0].founder_name.slice(1)}</h2>`);
             $("#founder-headline").html(result[0].headline);
             $("#profile-main-image").attr("src", "/assets/images/profile/" + result[0].main_image);
             $("#profile-about-image").attr("src", "/assets/images/profile/" + result[0].about_image);
@@ -142,16 +148,18 @@ $.ajax({
                 let pages = '';
                 result.forEach((page) => {
                     pages += `
-                    <div class="single-blog">
-                        <div class="single-blog__img">
-                            <img src="/assets/images/${page.image_path}" alt="blog image">
+                    <a href="/blog/${page.title.split(" ").join('+')}">
+                        <div class="single-blog">
+                            <div class="single-blog__img">
+                                <img src="/assets/images/${page.image_path}" alt="blog image">
+                            </div>
+                            <div class="single-blog__text">
+                                <h4>${page.title}</h4>
+                                <span>Posted in ${ page.time_posted.split("T")[0] } ${page.time_posted.split("T")[1].split(".")[0]}</span>
+                                <p>${extractContent(decodeURI(page.contents))}</p>
+                            </div>
                         </div>
-                        <div class="single-blog__text">
-                            <h4>${page.title}</h4>
-                            <span>Posted in ${ page.time_posted.split("T")[0] } ${page.time_posted.split("T")[1].split(".")[0]}</span>
-                            <p>${page.contents}</p>
-                        </div>
-                    </div>`;
+                    </a>`;
                 });
 
                 $('.pages').html(pages);

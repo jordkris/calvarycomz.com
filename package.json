@@ -4,8 +4,8 @@
     "description": "TITLE: \r Author - 100% Fully Responsive One Page HTML5 Template",
     "main": "index.js",
     "scripts": {
-        "start": "node -r dotenv/config app.js",
-        "dev": "nodemon -r dotenv/config app.js",
+        "start": "forever start -r --minUptime 1000 --spinSleepTime 1000 app.js",
+        "dev": "nodemon app.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -20,19 +20,22 @@
     },
     "homepage": "https://github.com/jordy-k/yehezkielferi.com#readme",
     "dependencies": {
+        "body-parser": "^1.20.0",
         "connect-flash": "^0.1.1",
         "cookie-parser": "^1.4.6",
+        "decode-uri-component": "^0.2.0",
         "dotenv": "^16.0.1",
         "ejs": "^3.1.6",
         "express": "^4.17.1",
         "express-session": "^1.17.3",
+        "forever": "^4.0.3",
         "http": "0.0.1-security",
         "jquery": "^3.6.0",
         "local-storage": "^2.0.0",
         "md5": "^2.3.0",
         "method-override": "^3.0.0",
         "mysql": "^2.18.1",
-        "nodemon": "^2.0.12",
+        "nodemon": "^2.0.16",
         "path": "^0.12.7",
         "process": "^0.11.10"
     }

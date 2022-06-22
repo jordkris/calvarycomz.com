@@ -4,24 +4,34 @@ const express = require('express');
 const app = express();
 const path = require("path");
 var $ = require('jquery');
+const bodyParser = require('body-parser');
 // cookie & session 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 // handle crash
-const http = require('http');
-const terminate = require('./config/terminate.js');
-const server = http.createServer(app);
+// const http = require('http');
+// const terminate = require('./config/terminate.js');
+// const server = http.createServer(app);
 
-const exitHandler = terminate(server, {
-    coredump: false,
-    timeout: 500
-});
+// const exitHandler = terminate(server, {
+//     coredump: false,
+//     timeout: 500
+// });
 
-process.on('uncaughtException', exitHandler(0, 'Unexpected Error'));
-process.on('unhandledRejection', exitHandler(0, 'Unhandled Promise'));
-process.on('SIGTERM', exitHandler(0, 'SIGTERM'));
-process.on('SIGINT', exitHandler(0, 'SIGINT'));
+// process.on('uncaughtException', exitHandler(1, 'Unexpected Error'));
+// process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'));
+// process.on('SIGTERM', exitHandler(1, 'SIGTERM'));
+// process.on('SIGINT', exitHandler(1, 'SIGINT'));
+process.on('uncaughtException', (error, origin) => {
+    console.log('origin', `: ${origin}`);
+    console.log('error', `: ${error}`);
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('promise', `: ${promise}`);
+    console.log('reason', `: ${reason}`);
+})
 
 
 // var methodOverride = require("method-override");
@@ -44,7 +54,9 @@ app.use(flash());
 app.use('/assets', express.static('assets'));
 
 // entended config
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 // app.use(methodOverride("_method"));
 
 // set views path

@@ -10,6 +10,7 @@ const admin = require("../controller/adminController");
 
 // implementation
 router.get("/", home.index);
+router.get("/blog/:title", home.page);
 router.get("/login", admin.login);
 router.post("/login", admin.processLogin);
 router.get("/admin", admin.index);
