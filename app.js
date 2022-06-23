@@ -83,6 +83,6 @@ app.use("/", webRouter);
 app.use("/api", apiRouter);
 
 // start server
-let appListen = app.listen(process.env.PORT || 3000, () => {
+let appListen = app.listen(process.env.PORT || 30000, () => {
     console.log(new Date().toLocaleString() + " Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
 });
