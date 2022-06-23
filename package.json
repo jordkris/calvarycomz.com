@@ -4,7 +4,7 @@
     "description": "TITLE: \r Author - 100% Fully Responsive One Page HTML5 Template",
     "main": "index.js",
     "scripts": {
-        "start": "forever start -r --minUptime 1000 --spinSleepTime 1000 app.js",
+        "start": "node app.js",
         "dev": "nodemon app.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
