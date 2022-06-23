@@ -5,10 +5,12 @@ const app = express();
 const path = require("path");
 var $ = require('jquery');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 // cookie & session 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
+
 // handle crash
 // const http = require('http');
 // const terminate = require('./config/terminate.js');
@@ -55,8 +57,8 @@ app.use('/assets', express.static('assets'));
 
 // entended config
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+// app.use(bodyParser.json({ limit: '50mb' }));
+// app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 // app.use(methodOverride("_method"));
 
 // set views path

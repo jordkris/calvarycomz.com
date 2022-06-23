@@ -14,18 +14,19 @@ let spinner = async(status) => {
     }
 }
 
-let updateToDB = (e) => {
+let updateToDB = (e, isEncode = false) => {
     let id = e.target.id;
     let value = e.target.value;
     if (value.length > 0) {
+        value = isEncode ? encodeHTML(value) : value;
         $.ajax({
             url: '/api/db/update',
             type: "POST",
             data: {
                 table: $(`#${id}`).attr('data-table'),
                 column: $(`#${id}`).attr('data-column'),
-                value: encodeURI($(`#${id}`).val()),
-                id: $(`#${id}`).attr('data-id'),
+                value: value,
+                id: $(`#${id}`).attr('data-id')
             },
             beforeSend: () => {
                 $(`#${id}`).removeClass('is-valid').addClass('is-loading');
@@ -45,6 +46,18 @@ let updateToDB = (e) => {
         $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
         spinner('error');
     }
+}
+
+let encodeHTML = (str) => {
+    let p = document.createElement("p");
+    p.textContent = str;
+    return p.innerHTML;
+}
+
+let decodeHTML = (html) => {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
 }
 
 (async() => {
@@ -172,7 +185,7 @@ let updateToDB = (e) => {
                                         <div class="form-group">
                                             <label>Contents</label>
                                             <textarea id="page-contents-${page.id}" class="summernote" data-table="pages" data-column="contents" data-id="${page.id}">
-                                                ${page.contents}
+                                                ${decodeHTML(page.contents)}
                                             </textarea>
                                         </div>
                                     </div>
@@ -230,7 +243,7 @@ let updateToDB = (e) => {
         }
     });
     $(".summernote").on("summernote.change", (e) => { // callback as jquery custom event 
-        updateToDB(e);
+        updateToDB(e, true);
     });
     $('input,textarea').change((e) => {
         updateToDB(e);
