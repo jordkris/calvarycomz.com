@@ -20,5 +20,24 @@ module.exports = {
             }
             // con.release();
         })
-    }
+    },
+    saveContent: (con, res, opts) => {
+
+        console.log(opts);
+        con.query(`UPDATE pages SET contents = "${opts.value}" WHERE id = "${opts.id}"`, (err, rows) => {
+            console.log('success', rows)
+            res.header("Content-Type", 'application/json');
+            if (!err) {
+                res.status(200).send(JSON.stringify({
+                    status: "success",
+                }, null, 4));
+            } else {
+                res.status(500).send(JSON.stringify({
+                    status: "error",
+                    message: err.message
+                }, null, 4));
+            }
+            // con.release();
+        });
+    },
 }

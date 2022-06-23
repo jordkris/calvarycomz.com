@@ -17,5 +17,6 @@ router.get("/books/getAll", books.getAll);
 router.get("/pages/getAll", pages.getAll);
 router.get("/reviews/getAll", reviews.getAll);
 router.post("/pages/get", pages.get);
+router.post("/pages/updatePageContent/:id", pages.updatePageContent);
 router.post("/db/update", db.update);
 module.exports = router;

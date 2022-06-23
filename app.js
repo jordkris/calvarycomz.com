@@ -3,7 +3,6 @@ const process = require('process');
 const express = require('express');
 const app = express();
 const path = require("path");
-var $ = require('jquery');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 // cookie & session 
@@ -85,5 +84,5 @@ app.use("/api", apiRouter);
 
 // start server
 let appListen = app.listen(process.env.PORT || 3000, () => {
-    console.log("Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
+    console.log(new Date().toLocaleString() + " Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
 });

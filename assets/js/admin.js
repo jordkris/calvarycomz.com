@@ -14,86 +14,124 @@ let spinner = async(status) => {
     }
 }
 
-let updateToDB = (e, isEncode = false) => {
+let updateToDB = async(e, updateContents = false) => {
     let id = e.target.id;
-    let value = e.target.value;
+    let value = e.target.value.trim();
     if (value.length > 0) {
-        value = isEncode ? encodeHTML(value) : value;
-        $.ajax({
-            url: '/api/db/update',
-            type: "POST",
-            data: {
-                table: $(`#${id}`).attr('data-table'),
-                column: $(`#${id}`).attr('data-column'),
-                value: value,
-                id: $(`#${id}`).attr('data-id')
-            },
-            beforeSend: () => {
-                $(`#${id}`).removeClass('is-valid').addClass('is-loading');
-                spinner('loading');
-            },
-            success: (result) => {
-                $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
-                spinner('saved');
-            },
-            error: (e) => {
-                console.error(e);
-                $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
-                spinner('error');
-            }
-        });
+        value = updateContents ? encodeURIComponent(value) : value;
+        if (updateContents) {
+            let currentPageContents = await getPageContents();
+            currentPageContents[id] = value.replace(/\s\s+/g, ' ');
+            console.log(currentPageContents);
+            let formData = new FormData()
+            formData.append('pageContents', new Blob([JSON.stringify(currentPageContents)], { type: "application/json" }), 'pageContents.json');
+            $.ajax({
+                url: '/api/pages/updatePageContent/' + $(`#${id}`).attr('data-id'),
+                data: formData,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+                    $(`#${id}`).removeClass('is-valid').addClass('is-loading');
+                    spinner('loading');
+                },
+                success: (result) => {
+                    $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
+                    spinner('saved');
+                    if (!result.fatal) {
+                        console.log(result);
+                    }
+                },
+                error: (e) => {
+                    console.error(e);
+                    $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
+                    spinner('error');
+                }
+            });
+        } else {
+            $.ajax({
+                url: '/api/db/update',
+                type: "POST",
+                data: {
+                    table: $(`#${id}`).attr('data-table'),
+                    column: $(`#${id}`).attr('data-column'),
+                    value: value,
+                    id: $(`#${id}`).attr('data-id')
+                },
+                beforeSend: () => {
+                    $(`#${id}`).removeClass('is-valid').addClass('is-loading');
+                    spinner('loading');
+                },
+                success: (result) => {
+                    $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
+                    spinner('saved');
+                },
+                error: (e) => {
+                    console.error(e);
+                    $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
+                    spinner('error');
+                }
+            });
+        }
     } else {
         $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
         spinner('error');
     }
 }
 
-let encodeHTML = (str) => {
-    let p = document.createElement("p");
-    p.textContent = str;
-    return p.innerHTML;
-}
-
-let decodeHTML = (html) => {
-    let txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
+let getPageContents = async() => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/assets/data/pageContents.json',
+            type: "GET",
+            beforeSend: () => {},
+            success: (result) => {
+                if (!result.fatal) {
+                    resolve(result);
+                }
+            },
+            error: (e) => {
+                reject(e);
+            }
+        });
+    });
 }
 
 (async() => {
-    await $.ajax({
-        url: '/api/profile/getAll',
-        type: "GET",
-        beforeSend: () => {},
-        success: (result) => {
-            if (!result.fatal) {
-                $("#organization-name").val(result[0].organization_name);
-                $("#organization-headline").val(result[0].organization_headline);
-                $("#organization-motto").val(result[0].motto);
-                $("#organization-photo").attr("src", "/assets/images/profile/" + result[0].main_image);
-                $("#founder-name").val(result[0].founder_name);
-                $("#founder-headline").val(result[0].headline);
-                $("#founder-photo").attr("src", "/assets/images/profile/" + result[0].about_image);
-                $('#biography-1').val(result[0].about_me_1);
-                $('#biography-2').val(result[0].about_me_2);
-                $('#facebook').val(result[0].facebook_url);
-                $('#instagram').val(result[0].instagram_url);
-                $('#youtube').val(result[0].youtube_url);
+        await $.ajax({
+            url: '/api/profile/getAll',
+            type: "GET",
+            beforeSend: () => {},
+            success: (result) => {
+                if (!result.fatal) {
+                    $("#organization-name").val(result[0].organization_name);
+                    $("#organization-headline").val(result[0].organization_headline);
+                    $("#organization-motto").val(result[0].motto);
+                    $("#organization-photo").attr("src", "/assets/images/profile/" + result[0].main_image);
+                    $("#founder-name").val(result[0].founder_name);
+                    $("#founder-headline").val(result[0].headline);
+                    $("#founder-photo").attr("src", "/assets/images/profile/" + result[0].about_image);
+                    $('#biography-1').val(result[0].about_me_1);
+                    $('#biography-2').val(result[0].about_me_2);
+                    $('#facebook').val(result[0].facebook_url);
+                    $('#instagram').val(result[0].instagram_url);
+                    $('#youtube').val(result[0].youtube_url);
+                }
+            },
+            error: (e) => {
+                console.log(e);
             }
-        },
-        error: (e) => {
-            console.log(e);
-        }
-    });
-    await $.ajax({
-        url: '/api/books/getAll',
-        type: "GET",
-        beforeSend: () => {},
-        success: (result) => {
-            if (!result.fatal) {
-                let books = '';
-                result.forEach((book, i) => {
-                    books += `
+        });
+        await $.ajax({
+            url: '/api/books/getAll',
+            type: "GET",
+            beforeSend: () => {},
+            success: (result) => {
+                if (!result.fatal) {
+                    let books = '';
+                    result.forEach((book, i) => {
+                        books += `
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
@@ -132,24 +170,24 @@ let decodeHTML = (html) => {
                                 </div>
                             </div>
                         </div>`;
-                });
-                $('#books').html(books);
+                    });
+                    $('#books').html(books);
+                }
+            },
+            error: (e) => {
+                console.log(e);
             }
-        },
-        error: (e) => {
-            console.log(e);
-        }
-    });
-    await $.ajax({
-        url: '/api/pages/getAll',
-        type: "GET",
-        beforeSend: () => {},
-        success: (result) => {
-            if (!result.fatal) {
-                let pages = '';
-                let pageContentsId = [];
-                result.forEach((page, i) => {
-                    pages += `
+        });
+        await $.ajax({
+                    url: '/api/pages/getAll',
+                    type: "GET",
+                    beforeSend: () => {},
+                    success: async(result) => {
+                            if (!result.fatal) {
+                                let pages = '';
+                                let pageContents = await getPageContents();
+                                result.forEach((page, i) => {
+                                            pages += `
                     <div class="col-lg-6">
                         <div class="card">
                             <div class="card-header">
@@ -184,8 +222,8 @@ let decodeHTML = (html) => {
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label>Contents</label>
-                                            <textarea id="page-contents-${page.id}" class="summernote" data-table="pages" data-column="contents" data-id="${page.id}">
-                                                ${decodeHTML(page.contents)}
+                                            <textarea id="page-content-${page.id}" class="summernote" data-table="pages" data-column="contents" data-id="${page.id}">
+                                                ${decodeURIComponent(pageContents[`page-content-${page.id}`])}
                                             </textarea>
                                         </div>
                                     </div>
@@ -193,9 +231,7 @@ let decodeHTML = (html) => {
                             </div>
                         </div>
                     </div>`;
-                    pageContentsId.push(`page-contents-${page.id}`);
                 });
-                localStorage.setItem('pageContents', JSON.stringify(pageContentsId));
                 $('#pages').html(pages);
                 $('.summernote').summernote();
             }
@@ -242,7 +278,7 @@ let decodeHTML = (html) => {
             console.log(e);
         }
     });
-    $(".summernote").on("summernote.change", (e) => { // callback as jquery custom event 
+    $(".summernote").on("summernote.blur", (e) => { // callback as jquery custom event 
         updateToDB(e, true);
     });
     $('input,textarea').change((e) => {
