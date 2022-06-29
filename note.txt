@@ -1,4 +1,5 @@
 taskkill /F /IM node.exe
+pkill -f node
 
 {
     "page-content-1": "test",
@@ -6,3 +7,7 @@ taskkill /F /IM node.exe
     "page-content-3": "test",
     "page-content-4": "test"
 }
+
+file manager path : /home/caly6694/repositories/calvarycomz.com
+
+ssh : source /home/caly6694/nodevenv/repositories/calvarycomz.com/10/bin/activate && cd /home/caly6694/repositories/calvarycomz.com

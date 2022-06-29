@@ -18,7 +18,7 @@ let updateToDB = async(e, updateContents = false) => {
     let id = e.target.id;
     let value = e.target.value.trim();
     if (value.length > 0) {
-        value = updateContents ? encodeURIComponent(value) : value;
+        // value = updateContents ? encodeURIComponent(value) : value;
         if (updateContents) {
             let currentPageContents = await getPageContents();
             currentPageContents[id] = value.replace(/\s\s+/g, ' ');
@@ -99,39 +99,47 @@ let getPageContents = async() => {
 }
 
 (async() => {
-        await $.ajax({
-            url: '/api/profile/getAll',
-            type: "GET",
-            beforeSend: () => {},
-            success: (result) => {
-                if (!result.fatal) {
-                    $("#organization-name").val(result[0].organization_name);
-                    $("#organization-headline").val(result[0].organization_headline);
-                    $("#organization-motto").val(result[0].motto);
-                    $("#organization-photo").attr("src", "/assets/images/profile/" + result[0].main_image);
-                    $("#founder-name").val(result[0].founder_name);
-                    $("#founder-headline").val(result[0].headline);
-                    $("#founder-photo").attr("src", "/assets/images/profile/" + result[0].about_image);
-                    $('#biography-1').val(result[0].about_me_1);
-                    $('#biography-2').val(result[0].about_me_2);
-                    $('#facebook').val(result[0].facebook_url);
-                    $('#instagram').val(result[0].instagram_url);
-                    $('#youtube').val(result[0].youtube_url);
-                }
-            },
-            error: (e) => {
-                console.log(e);
+    await $.ajax({
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'profile',
+            select: '*'
+        },
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                $("#organization-name").val(result[0].organization_name);
+                $("#organization-headline").val(result[0].organization_headline);
+                $("#organization-motto").val(result[0].motto);
+                $("#organization-photo").attr("src", "/assets/images/profile/" + result[0].main_image);
+                $("#founder-name").val(result[0].founder_name);
+                $("#founder-headline").val(result[0].headline);
+                $("#founder-photo").attr("src", "/assets/images/profile/" + result[0].about_image);
+                $('#biography-1').val(result[0].about_me_1);
+                $('#biography-2').val(result[0].about_me_2);
+                $('#facebook').val(result[0].facebook_url);
+                $('#instagram').val(result[0].instagram_url);
+                $('#youtube').val(result[0].youtube_url);
             }
-        });
-        await $.ajax({
-            url: '/api/books/getAll',
-            type: "GET",
-            beforeSend: () => {},
-            success: (result) => {
-                if (!result.fatal) {
-                    let books = '';
-                    result.forEach((book, i) => {
-                        books += `
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    await $.ajax({
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'books',
+            select: '*'
+        },
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                let books = '';
+                result.forEach((book, i) => {
+                    books += `
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
@@ -170,24 +178,27 @@ let getPageContents = async() => {
                                 </div>
                             </div>
                         </div>`;
-                    });
-                    $('#books').html(books);
-                }
-            },
-            error: (e) => {
-                console.log(e);
+                });
+                $('#books').html(books);
             }
-        });
-        await $.ajax({
-                    url: '/api/pages/getAll',
-                    type: "GET",
-                    beforeSend: () => {},
-                    success: async(result) => {
-                            if (!result.fatal) {
-                                let pages = '';
-                                let pageContents = await getPageContents();
-                                result.forEach((page, i) => {
-                                            pages += `
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    await $.ajax({
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'pages',
+            select: '*'
+        },
+        beforeSend: () => {},
+        success: async(result) => {
+            if (!result.fatal) {
+                let pages = '';
+                result.forEach((page, i) => {
+                    pages += `
                     <div class="col-lg-6">
                         <div class="card">
                             <div class="card-header">
@@ -223,7 +234,7 @@ let getPageContents = async() => {
                                         <div class="form-group">
                                             <label>Contents</label>
                                             <textarea id="page-content-${page.id}" class="summernote" data-table="pages" data-column="contents" data-id="${page.id}">
-                                                ${decodeURIComponent(pageContents[`page-content-${page.id}`])}
+                                                ${he.decode(page.contents)}
                                             </textarea>
                                         </div>
                                     </div>
@@ -241,8 +252,12 @@ let getPageContents = async() => {
         }
     });
     await $.ajax({
-        url: '/api/reviews/getAll',
-        type: "GET",
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'reviews',
+            select: '*'
+        },
         beforeSend: () => {},
         success: (result) => {
             if (!result.fatal) {

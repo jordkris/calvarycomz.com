@@ -1,5 +1,5 @@
 const md5 = require('md5');
-const usersModel = require("../model/usersModel");
+const dbModel = require("../model/dbModel");
 const ls = require("local-storage");
 
 module.exports = {
@@ -10,24 +10,27 @@ module.exports = {
         res.render("admin/login.ejs", { errorMessage: req.flash('message')[0] });
     },
     processLogin: (req, res) => {
-        usersModel.getAdmin(req.con, (err, rows) => {
-            if (!err) {
-                if (rows[0].email == req.body.email) {
-                    if (rows[0].password === md5(req.body.password)) {
-                        ls.set('users', JSON.stringify(rows[0]));
-                        res.redirect('/admin');
-                    } else {
-                        req.flash('message', 'Incorrect email or password');
-                        res.redirect('/login');
-                    }
+        dbModel.get(req.con, {
+            table: 'users',
+            select: '*',
+            whereColumn: 'id',
+            whereValue: '1',
+        }, (results) => {
+            if (results[0].email == req.body.email) {
+                if (results[0].password === md5(req.body.password)) {
+                    ls.set('users', JSON.stringify(results[0]));
+                    res.redirect('/admin');
                 } else {
                     req.flash('message', 'Incorrect email or password');
                     res.redirect('/login');
                 }
-
             } else {
-                throw err;
+                req.flash('message', 'Incorrect email or password');
+                res.redirect('/login');
             }
+        }, (err) => {
+            req.flash('message', err.message);
+            res.redirect('/login');
         });
     }
 }

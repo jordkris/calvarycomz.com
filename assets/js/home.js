@@ -82,8 +82,12 @@ let getPageContents = async() => {
 }
 
 $.ajax({
-    url: '/api/profile/getAll',
-    type: "GET",
+    url: '/api/db/get',
+    type: 'POST',
+    data: {
+        table: 'profile',
+        select: '*',
+    },
     beforeSend: () => {
         loadingImage('profile-main-image', '636x718');
         loadingImage('profile-about-image', '380x265');
@@ -119,15 +123,19 @@ $.ajax({
 });
 
 (async() => {
-        await $.ajax({
-            url: '/api/books/getAll',
-            type: "GET",
-            beforeSend: () => {},
-            success: (result) => {
-                if (!result.fatal) {
-                    let books = '';
-                    result.forEach((book) => {
-                        books += `
+    await $.ajax({
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'books',
+            select: '*'
+        },
+        beforeSend: () => {},
+        success: (result) => {
+            if (!result.fatal) {
+                let books = '';
+                result.forEach((book) => {
+                    books += `
                 <div class="single-book">
                     <a href="#" class="single-book__img">
                         <img src="/assets/images/${book.image_path}" alt="single book and cd">
@@ -147,36 +155,38 @@ $.ajax({
                     </div>
                     <!-- star rating end -->
                 </div>`;
-                    });
+                });
 
-                    $('.books').html(books);
-                    $('#books-count').attr('data-count', result.length);
+                $('.books').html(books);
+                $('#books-count').attr('data-count', result.length);
+            }
+        },
+        error: (e) => {
+            console.log(e);
+        }
+    });
+    let pagesData = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/db/get',
+            type: 'POST',
+            data: {
+                table: 'pages',
+                select: '*'
+            },
+            beforeSend: () => {},
+            success: (result) => {
+                if (!result.fatal) {
+                    resolve(result);
                 }
             },
             error: (e) => {
-                console.log(e);
+                reject(e);
             }
         });
-        let pagesData = await new Promise((resolve, reject) => {
-            $.ajax({
-                url: '/api/pages/getAll',
-                type: "GET",
-                beforeSend: () => {},
-                success: (result) => {
-                    if (!result.fatal) {
-                        resolve(result);
-                    }
-                },
-                error: (e) => {
-                    reject(e);
-                }
-            });
-        });
-        let pageContents = await getPageContents();
-        console.log(await pageContents);
-        let pages = '';
-        await pagesData.forEach((page) => {
-                    pages += `
+    });
+    let pages = '';
+    await pagesData.forEach((page) => {
+        pages += `
             <a href="/blog/${page.title.split(" ").join('+')}">
                 <div class="single-blog">
                     <div class="single-blog__img">
@@ -185,16 +195,20 @@ $.ajax({
                     <div class="single-blog__text">
                         <h4>${page.title}</h4>
                         <span>Posted in ${ page.time_posted.split("T")[0] } ${page.time_posted.split("T")[1].split(".")[0]}</span>
-                        <p>${extractContent(decodeURIComponent(pageContents[`page-content-${page.id}`])).slice(0,230)}</p>
+                        <p>${extractContent(he.decode(page.contents)).slice(0,230)}</p>
                     </div>
                 </div>
-            </a>`;  
-        });
-        $('.pages').html(pages);
-        $('#pages-count').attr('data-count', await pagesData.length);
-        await $.ajax({
-        url: '/api/reviews/getAll',
-        type: "GET",
+            </a>`;
+    });
+    $('.pages').html(pages);
+    $('#pages-count').attr('data-count', await pagesData.length);
+    await $.ajax({
+        url: '/api/db/get',
+        type: 'POST',
+        data: {
+            table: 'reviews',
+            select: '*'
+        },
         beforeSend: () => {},
         success: (result) => {
             if (!result.fatal) {

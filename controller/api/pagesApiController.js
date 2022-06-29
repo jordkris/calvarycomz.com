@@ -1,8 +1,8 @@
-const pagesModel = require("../../model/pagesModel");
+const dbModel = require("../../model/dbModel");
 const summernote = require('summernote-nodejs');
 const multer = require('multer');
-const path = require('path');
-let fs = require('fs');
+const fs = require('fs');
+const he = require('he');
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -23,25 +23,23 @@ module.exports = {
         pagesModel.get(req.con, res, req.body.title);
     },
     updatePageContent: async(req, res) => {
-        upload(req, res, (err) => {
-            if (err) {
-                console.log(err)
-            }
-
-            if (!req.files) {
-                console.log('No files received');
-            } else {
-                console.log('success');
-            }
-
-            (async() => {
-                fs.readFile('assets/data/pageContents.json', 'utf8', function(err, data) {
-                    if (err) throw err;
-                    let summernoteContents = summernote(decodeURIComponent(JSON.parse(data)[`page-content-${req.params.id}`]), 'assets/data/');
-                    console.log(summernoteContents.replace(/\s\s+/g, ' '));
-                    pagesModel.saveContent(req.con, res, { value: encodeURIComponent(summernoteContents.replace(/\s\s+/g, ' ')), id: req.params.id });
+        try {
+            upload(req, res, (e) => {
+                throw e;
+            });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            fs.readFile('assets/data/pageContents.json', 'utf8', async(err, data) => {
+                if (err) throw err;
+                let summernoteContents = await summernote(JSON.parse(data)[`page-content-${req.params.id}`], 'assets/data');
+                dbModel.update(req.con, res, {
+                    table: 'pages',
+                    column: 'contents',
+                    value: he.encode(await summernoteContents.replace(/\s\s+/g, ' ').replace('./', '/')),
+                    id: req.params.id
                 });
-            })()
-        });
+            });
+        }
     }
 }
