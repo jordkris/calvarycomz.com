@@ -1,8 +1,10 @@
 const dbModel = require("../../model/dbModel");
+const jsonFile = require('jsonfile');
 const summernote = require('summernote-nodejs');
 const multer = require('multer');
 const fs = require('fs');
 const he = require('he');
+const { parse } = require("path");
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -16,30 +18,20 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('pageContents');
 
 module.exports = {
-    getAll: (req, res) => {
-        pagesModel.getAll(req.con, res);
-    },
-    get: (req, res) => {
-        pagesModel.get(req.con, res, req.body.title);
-    },
     updatePageContent: async(req, res) => {
-        try {
-            upload(req, res, (e) => {
-                throw e;
+        upload(req, res, (e) => {
+            // console.error(e);
+        });
+        jsonFile.readFile('assets/data/pageContents.json', async(err, data) => {
+            if (err) throw err;
+            let summernoteContents = await summernote(data[`page-content-${req.params.id}`], 'assets/data');
+            // console.log(summernoteContents);
+            dbModel.update(req.con, res, {
+                table: 'pages',
+                column: 'contents',
+                value: he.encode(await summernoteContents.replace(/\s\s+/g, ' ').replace('./', '/')),
+                id: req.params.id
             });
-        } catch (err) {
-            console.log(err);
-        } finally {
-            fs.readFile('assets/data/pageContents.json', 'utf8', async(err, data) => {
-                if (err) throw err;
-                let summernoteContents = await summernote(JSON.parse(data)[`page-content-${req.params.id}`], 'assets/data');
-                dbModel.update(req.con, res, {
-                    table: 'pages',
-                    column: 'contents',
-                    value: he.encode(await summernoteContents.replace(/\s\s+/g, ' ').replace('./', '/')),
-                    id: req.params.id
-                });
-            });
-        }
+        });
     }
 }

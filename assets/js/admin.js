@@ -14,88 +14,92 @@ let spinner = async(status) => {
     }
 }
 
-let updateToDB = async(e, updateContents = false) => {
-    let id = e.target.id;
-    let value = e.target.value.trim();
-    if (value.length > 0) {
-        // value = updateContents ? encodeURIComponent(value) : value;
-        if (updateContents) {
-            let currentPageContents = await getPageContents();
-            currentPageContents[id] = value.replace(/\s\s+/g, ' ');
-            console.log(currentPageContents);
-            let formData = new FormData()
-            formData.append('pageContents', new Blob([JSON.stringify(currentPageContents)], { type: "application/json" }), 'pageContents.json');
-            $.ajax({
-                url: '/api/pages/updatePageContent/' + $(`#${id}`).attr('data-id'),
-                data: formData,
-                type: 'POST',
-                enctype: 'multipart/form-data',
-                contentType: false,
-                processData: false,
-                beforeSend: () => {
-                    $(`#${id}`).removeClass('is-valid').addClass('is-loading');
-                    spinner('loading');
-                },
-                success: (result) => {
-                    $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
-                    spinner('saved');
-                    if (!result.fatal) {
-                        console.log(result);
-                    }
-                },
-                error: (e) => {
-                    console.error(e);
-                    $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
-                    spinner('error');
-                }
-            });
-        } else {
-            $.ajax({
-                url: '/api/db/update',
-                type: "POST",
-                data: {
-                    table: $(`#${id}`).attr('data-table'),
-                    column: $(`#${id}`).attr('data-column'),
-                    value: value,
-                    id: $(`#${id}`).attr('data-id')
-                },
-                beforeSend: () => {
-                    $(`#${id}`).removeClass('is-valid').addClass('is-loading');
-                    spinner('loading');
-                },
-                success: (result) => {
-                    $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
-                    spinner('saved');
-                },
-                error: (e) => {
-                    console.error(e);
-                    $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
-                    spinner('error');
-                }
-            });
-        }
-    } else {
-        $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
-        spinner('error');
-    }
-}
-
 let getPageContents = async() => {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: '/assets/data/pageContents.json',
-            type: "GET",
+            type: 'GET',
             beforeSend: () => {},
             success: (result) => {
-                if (!result.fatal) {
-                    resolve(result);
-                }
+                // if (!result.fatal) {
+                resolve(result);
+                // }
             },
             error: (e) => {
                 reject(e);
             }
         });
     });
+}
+
+let updateToDB = async(e, updateContents = false) => {
+    try {
+        let id = e.target.id;
+        let value = e.target.value.trim();
+        if (value.length > 0) {
+            // value = updateContents ? encodeURIComponent(value) : value;
+            if (updateContents) {
+                let currentPageContents = await getPageContents();
+                currentPageContents[id] = value.replace(/\s\s+/g, ' ');
+                console.log(currentPageContents);
+                let formData = new FormData()
+                formData.append('pageContents', new Blob([JSON.stringify(currentPageContents)], { type: "application/json" }), 'pageContents.json');
+                $.ajax({
+                    url: '/api/pages/updatePageContent/' + $(`#${id}`).attr('data-id'),
+                    data: formData,
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    contentType: false,
+                    processData: false,
+                    beforeSend: () => {
+                        $(`#${id}`).removeClass('is-valid').addClass('is-loading');
+                        spinner('loading');
+                    },
+                    success: (result) => {
+                        $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
+                        spinner('saved');
+                        if (!result.fatal) {
+                            console.log(result);
+                        }
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
+                        spinner('error');
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/api/db/update',
+                    type: "POST",
+                    data: {
+                        table: $(`#${id}`).attr('data-table'),
+                        column: $(`#${id}`).attr('data-column'),
+                        value: value,
+                        id: $(`#${id}`).attr('data-id')
+                    },
+                    beforeSend: () => {
+                        $(`#${id}`).removeClass('is-valid').addClass('is-loading');
+                        spinner('loading');
+                    },
+                    success: (result) => {
+                        $(`#${id}`).removeClass('is-invalid').addClass('is-valid');
+                        spinner('saved');
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
+                        spinner('error');
+                    }
+                });
+            }
+        } else {
+            $(`#${id}`).removeClass('is-valid').addClass('is-invalid');
+            spinner('error');
+        }
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 (async() => {
@@ -296,8 +300,8 @@ let getPageContents = async() => {
     $(".summernote").on("summernote.blur", (e) => { // callback as jquery custom event 
         updateToDB(e, true);
     });
-    $('input,textarea').change((e) => {
-        updateToDB(e);
+    $('input,textarea').change(async(e) => {
+        await updateToDB(e);
     }).keyup(() => {
         spinner('loading');
     });

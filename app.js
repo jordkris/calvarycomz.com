@@ -24,15 +24,17 @@ const flash = require('connect-flash');
 // process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'));
 // process.on('SIGTERM', exitHandler(1, 'SIGTERM'));
 // process.on('SIGINT', exitHandler(1, 'SIGINT'));
-process.on('uncaughtException', (error, origin) => {
-    console.log('origin', `: ${origin}`);
-    console.log('error', `: ${error}`);
-})
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.log('promise', `: ${promise}`);
-    console.log('reason', `: ${reason}`);
-})
+
+// process.on('uncaughtException', (error, origin) => {
+//     console.log('origin', `: ${origin}`);
+//     console.log('error', `: ${error}`);
+// })
+
+// process.on('unhandledRejection', (reason, promise) => {
+//     console.log('promise', `: ${promise}`);
+//     console.log('reason', `: ${reason}`);
+// })
 
 
 // var methodOverride = require("method-override");
@@ -83,6 +85,6 @@ app.use("/", webRouter);
 app.use("/api", apiRouter);
 
 // start server
-let appListen = app.listen(process.env.PORT || 30000, () => {
-    console.log("[" + new Date().toLocaleString() + "] Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
-});
+// let appListen = app.listen(process.env.PORT || 30000, () => {
+//     console.log("[" + new Date().toLocaleString() + "] Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
+// });

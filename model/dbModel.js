@@ -12,6 +12,7 @@ module.exports = {
                 status: "success",
             }, null, 4));
         }).catch((err) => {
+            console.error(err);
             res.status(500).send(JSON.stringify({
                 status: 'error',
                 message: err.message
