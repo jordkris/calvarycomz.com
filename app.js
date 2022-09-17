@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const path = require("path");
 const bodyParser = require('body-parser');
+const http = require('http');
 require('dotenv').config();
 // cookie & session 
 const session = require('express-session');
@@ -73,7 +74,7 @@ app.set('view engine', 'ejs');
 // declare connection to db connection
 let con = require("./config/database.js");
 // connect route to database
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     req.con = con;
     return next();
 });
@@ -88,3 +89,7 @@ app.use("/api", apiRouter);
 // let appListen = app.listen(process.env.PORT || 30000, () => {
 //     console.log("[" + new Date().toLocaleString() + "] Express server listening on port %d in %s mode", appListen.address().port, app.settings.env);
 // });
+app.set('port', process.env.PORT || 30000);
+http.createServer(app).listen(app.get('port'), () => {
+    console.log(`[${new Date().toLocaleString()}] Express server listening on port ${app.get('port')}`);
+});

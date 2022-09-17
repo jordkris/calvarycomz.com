@@ -1,6 +1,5 @@
 const md5 = require('md5');
 const dbModel = require("../model/dbModel");
-const ls = require("local-storage");
 
 module.exports = {
     index: (req, res) => {
@@ -18,7 +17,7 @@ module.exports = {
         }, (results) => {
             if (results[0].email == req.body.email) {
                 if (results[0].password === md5(req.body.password)) {
-                    ls.set('users', JSON.stringify(results[0]));
+
                     res.redirect('/admin');
                 } else {
                     req.flash('message', 'Incorrect email or password');

@@ -1,3 +1,5 @@
 node_modules/
 /yehezkielferi.com.code-workspace
 /.idea
+/package-lock.json
+/.env
