@@ -1,22 +1,43 @@
+let message;
 module.exports = {
-    get: (con, opts, callback, error) => {
+    get: (con, res, opts, callback) => {
+        let errorCallback = (err) => {
+            console.error(`Failed get data from table ${opts.table}: ${err.message}`);
+            if (opts.server) {
+                res.status(500).json({
+                    status: 'error',
+                    message: err.message
+                });
+            }
+        }
         if (opts.whereColumn && opts.whereValue) {
-            con(opts.table).select(opts.select).where(opts.whereColumn, opts.whereValue).then(callback).catch(error);
+            con(opts.table).select(opts.select).where(opts.whereColumn, opts.whereValue).then(callback).catch(errorCallback);
         } else {
-            con(opts.table).select(opts.select).then(callback).catch(error);
+            con(opts.table).select(opts.select).then(callback).catch(errorCallback);
         }
     },
     update: (con, res, opts) => {
-        con(opts.table).update(opts.column, opts.value).where('id', opts.id).then((results) => {
-            res.status(200).send(JSON.stringify({
-                status: "success",
-            }, null, 4));
+        con(opts.table).update(opts.column, opts.value).where('id', opts.id).then((result) => {
+            if (result) {
+                message = 'Success update table';
+                console.log(message);
+                if (opts.server) {
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'Success update table'
+                    });
+                }
+            } else {
+                throw new Error(`Failed update table ${opts.table}`);
+            }
         }).catch((err) => {
-            console.error(err);
-            res.status(500).send(JSON.stringify({
-                status: 'error',
-                message: err.message
-            }, null, 4));
+            console.error(`Error update data in table ${opts.table}: ${err.message}`);
+            if (opts.server) {
+                res.status(500).json({
+                    status: 'error',
+                    message: err.message
+                });
+            }
         });
     },
 }
