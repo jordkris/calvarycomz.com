@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const process = require('process');
 
 module.exports = {
-    processLogin: async(req, res) => {
+    processLogin: async (req, res) => {
         try {
-            let results = await new Promise((resolve, reject) => {
+            let results = await new Promise((resolve) => {
                 dbModel.get(req.con, res, {
                     table: 'users',
                     select: '*',
@@ -17,16 +17,15 @@ module.exports = {
                     resolve(results);
                 });
             });
-            console.log(await results);
-            let userId = await results[0].id;
-            let email = await results[0].email;
-            let password = await results[0].password;
-            let name = await results[0].name;
+            let userId = results[0].id;
+            let email = results[0].email;
+            let password = results[0].password;
+            let name = results[0].name;
             if (email === req.body.email && password === md5(req.body.password)) {
-                let accessToken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, {
+                let accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET, {
                     expiresIn: '20s'
                 });
-                let refreshToken = jwt.sign({ userId, name, email }, process.env.REFRESH_TOKEN_SECRET, {
+                let refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET, {
                     expiresIn: '1d'
                 });
                 dbModel.update(req.con, res, {
@@ -43,19 +42,28 @@ module.exports = {
                 // req.flash('accessToken', accessToken);
                 // res.redirect('/admin');
                 res.status(200).json({
-                    status: 'sucess',
+                    ok: true,
                     accessToken: accessToken
                 });
             } else {
                 // req.flash('message', 'Incorrect email or password');
                 // res.redirect('/login');
-                throw new Error('Invalid email or password');
+                res.status(200).json({
+                    ok: false,
+                    message: 'Incorrect email or password'
+                });
             }
         } catch (err) {
             res.status(500).json({
-                status: 'error',
+                ok: false,
                 message: err.message
             });
         }
+    },
+    setSession: (req, res) => {
+
+    }
+    , checkSession: (req, res) => {
+        res.status(200).json(req.cookies);
     }
 }

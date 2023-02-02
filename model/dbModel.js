@@ -1,4 +1,3 @@
-let message;
 module.exports = {
     get: (con, res, opts, callback) => {
         let errorCallback = (err) => {
@@ -19,12 +18,12 @@ module.exports = {
     update: (con, res, opts) => {
         con(opts.table).update(opts.column, opts.value).where('id', opts.id).then((result) => {
             if (result) {
-                message = 'Success update table';
+                let message = 'Success update table';
                 console.log(message);
                 if (opts.server) {
                     res.status(200).json({
                         status: 'success',
-                        message: 'Success update table'
+                        message: message
                     });
                 }
             } else {

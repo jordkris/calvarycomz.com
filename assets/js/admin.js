@@ -11,6 +11,7 @@ let spinner = async(status) => {
             break;
         case "loaded":
             $('#status').html(`<span class="text-success"><i class="fas fa-check"></i>&nbsp;Data Loaded</span>`);
+            break;
     }
 }
 
@@ -128,7 +129,7 @@ let updateToDB = async(e, updateContents = false) => {
             }
         },
         error: (e) => {
-            console.log(e);
+            console.error(e);
         }
     });
     await $.ajax({
@@ -187,7 +188,7 @@ let updateToDB = async(e, updateContents = false) => {
             }
         },
         error: (e) => {
-            console.log(e);
+            console.error(e);
         }
     });
     await $.ajax({

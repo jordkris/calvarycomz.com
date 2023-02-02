@@ -25,38 +25,31 @@
                 </h1>
             </div>
             <div class="card-body">
-                <% if(errorMessage) { %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <%= errorMessage %>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div id="errorDiv"></div>
+                <form id="login" method="post">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Email" name="email" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
                     </div>
-                    <% } %>
-                        <form method="post">
-                            <div class="input-group mb-3">
-                                <input type="email" class="form-control" placeholder="Email" name="email" required>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-envelope"></span>
-                                    </div>
-                                </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" placeholder="Password" name="password" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
                             </div>
-                            <div class="input-group mb-3">
-                                <input type="password" class="form-control" placeholder="Password" name="password" required>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-lock"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                                </div>
-                                <!-- /.col -->
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button id="loginBtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
             </div>
             <!-- /.card-body -->
         </div>
@@ -70,6 +63,8 @@
     <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/assets/dist/js/adminlte.min.js"></script>
+    <!-- Page specific script -->
+    <script src="/assets/js/login.js"></script>
 </body>
 
 </html>

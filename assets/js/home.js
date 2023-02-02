@@ -118,7 +118,7 @@ $.ajax({
         }
     },
     error: (e) => {
-        console.log(e);
+        console.error(e);
     }
 });
 
@@ -162,7 +162,7 @@ $.ajax({
             }
         },
         error: (e) => {
-            console.log(e);
+            console.error(e);
         }
     });
     let pagesData = await new Promise((resolve, reject) => {
@@ -229,7 +229,7 @@ $.ajax({
             }
         },
         error: (e) => {
-            console.log(e);
+            console.error(e);
         }
     });
     await $(window).scroll(() => {

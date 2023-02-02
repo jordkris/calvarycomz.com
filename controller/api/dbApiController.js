@@ -9,7 +9,7 @@ module.exports = {
             whereValue: req.body.whereValue,
             server: true
         }, (results) => {
-            console.log(`Success get data from table ${opts.table}`);
+            console.log(`Success get data from table ${req.body.table}`);
             res.status(200).json(results);
         });
     },
